@@ -35,10 +35,12 @@ interface FireLog {
   humidity?: number;
   fireConfidence?: number;
   heatDetected: boolean;
+  flameDetected: boolean;
   visualDetected: boolean;
   waterCannonActivated: boolean;
-  responseTime?: string;
-  status: 'active' | 'resolved' | 'false-alarm';
+  waterCannonActivatedTime?: string;
+  emergencyCallTime?: string;
+  status: 'active' | 'resolved' | 'cleared';
 }
 
 // Parse CSV helper function with proper quote handling
@@ -85,10 +87,12 @@ const parseCSV = (csv: string): FireLog[] => {
       humidity: obj.humidity && obj.humidity !== '' ? parseFloat(obj.humidity) : undefined,
       fireConfidence: obj.fireConfidence && obj.fireConfidence !== '' ? parseFloat(obj.fireConfidence) : undefined,
       heatDetected: obj.heatDetected === 'true',
+      flameDetected: obj.flameDetected === 'true',
       visualDetected: obj.visualDetected === 'true',
       waterCannonActivated: obj.waterCannonActivated === 'true',
-      responseTime: obj.responseTime && obj.responseTime !== '' ? obj.responseTime : undefined,
-      status: obj.status as 'active' | 'resolved' | 'false-alarm'
+      waterCannonActivatedTime: obj.waterCannonActivatedTime && obj.waterCannonActivatedTime !== '' ? obj.waterCannonActivatedTime : undefined,
+      emergencyCallTime: obj.emergencyCallTime && obj.emergencyCallTime !== '' ? obj.emergencyCallTime : undefined,
+      status: obj.status as 'active' | 'resolved' | 'cleared'
     };
   });
 };
@@ -181,9 +185,11 @@ const Logs = () => {
       'Humidity (%)': log.humidity || 'N/A',
       'AI Confidence': log.fireConfidence ? `${(log.fireConfidence * 100).toFixed(1)}%` : 'N/A',
       'Heat Detected': log.heatDetected ? 'Yes' : 'No',
+      'Flame Detected': log.flameDetected ? 'Yes' : 'No',
       'Visual Detected': log.visualDetected ? 'Yes' : 'No',
       'Water Cannon': log.waterCannonActivated ? 'Activated' : 'Not Activated',
-      'Response Time': log.responseTime || 'N/A',
+      'Water Cannon Time': log.waterCannonActivatedTime || 'N/A',
+      'Emergency Call Time': log.emergencyCallTime || 'N/A',
       'Status': log.status.toUpperCase()
     }));
 
@@ -250,9 +256,9 @@ const Logs = () => {
             </p>
           </Card>
           <Card className="p-4">
-            <p className="text-sm text-muted-foreground mb-1">False Alarms</p>
+            <p className="text-sm text-muted-foreground mb-1">Cleared</p>
             <p className="text-2xl font-bold text-muted-foreground">
-              {logs.filter(l => l.status === 'false-alarm').length}
+              {logs.filter(l => l.status === 'cleared').length}
             </p>
           </Card>
         </div>
@@ -410,25 +416,42 @@ const Logs = () => {
                 )}
               </div>
 
-              <div className="flex items-center gap-4 text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                 <div className="flex items-center gap-2">
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    log.heatDetected ? 'bg-red-500/10 text-red-500' : 'bg-gray-500/10 text-gray-500'
+                  <span className={`px-3 py-2 rounded text-sm font-medium flex-1 ${
+                    log.heatDetected ? 'bg-red-500/10 text-red-500 border border-red-500/20' : 'bg-gray-500/10 text-gray-500'
                   }`}>
-                    🔥 Heat: {log.heatDetected ? 'Detected' : 'Normal'}
+                    🔥 Heat: {log.heatDetected ? 'Detected' : 'Clear'}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    log.visualDetected ? 'bg-orange-500/10 text-orange-500' : 'bg-gray-500/10 text-gray-500'
+                  <span className={`px-3 py-2 rounded text-sm font-medium flex-1 ${
+                    log.flameDetected ? 'bg-orange-500/10 text-orange-500 border border-orange-500/20' : 'bg-gray-500/10 text-gray-500'
+                  }`}>
+                    🔥 Flame: {log.flameDetected ? 'Detected' : 'Clear'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`px-3 py-2 rounded text-sm font-medium flex-1 ${
+                    log.visualDetected ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20' : 'bg-gray-500/10 text-gray-500'
                   }`}>
                     👁️ Visual: {log.visualDetected ? 'Detected' : 'Clear'}
                   </span>
                 </div>
-                {log.responseTime && (
+              </div>
+
+              <div className="flex items-center gap-4 text-sm flex-wrap">
+                {log.waterCannonActivatedTime && (
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-1 rounded text-xs font-medium bg-blue-500/10 text-blue-500">
-                      ⏱️ Response: {log.responseTime}
+                      � Water Cannon Activated at: {log.waterCannonActivatedTime}
+                    </span>
+                  </div>
+                )}
+                {log.emergencyCallTime && (
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-1 rounded text-xs font-medium bg-purple-500/10 text-purple-500">
+                      📞 Emergency Hotline Called at: {log.emergencyCallTime}
                     </span>
                   </div>
                 )}
