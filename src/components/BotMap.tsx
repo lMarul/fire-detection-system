@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import { FireBot } from '@/types/bot';
+import CCTVDialog from './CCTVDialog';
 import 'leaflet/dist/leaflet.css';
 
 interface BotMapProps {
@@ -11,12 +12,14 @@ const BotMap = ({ bots }: BotMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
+  const [selectedBot, setSelectedBot] = useState<FireBot | null>(null);
+  const [cctvOpen, setCctvOpen] = useState(false);
 
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
-    // Initialize map
-    const map = L.map(mapRef.current).setView([37.7749, -122.4194], 13);
+    // Initialize map - Pasay City, Barangay 165
+    const map = L.map(mapRef.current).setView([14.5329, 121.0066], 15);
 
     // Add tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -74,20 +77,39 @@ const BotMap = ({ bots }: BotMapProps) => {
           ${bot.status === 'active' && bot.lastActive 
             ? `<div class="text-xs text-gray-600 mt-1">Last Active: ${bot.lastActive}</div>` 
             : ''}
+          <button class="mt-2 w-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium py-1 px-2 rounded" onclick="window.openCCTV_${bot.id.replace(/-/g, '_')}()">
+            📹 View CCTV Feed
+          </button>
         </div>
       `;
 
       marker.bindPopup(popupContent);
+      
+      // Add click handler for CCTV
+      (window as any)[`openCCTV_${bot.id.replace(/-/g, '_')}`] = () => {
+        // Close the popup when opening CCTV
+        marker.closePopup();
+        setSelectedBot(bot);
+        setCctvOpen(true);
+      };
+
       markersRef.current.push(marker);
     });
   }, [bots]);
 
   return (
-    <div 
-      ref={mapRef} 
-      className="h-full w-full rounded-lg overflow-hidden border border-border"
-      style={{ minHeight: '500px' }}
-    />
+    <>
+      <div 
+        ref={mapRef} 
+        className="h-full w-full rounded-lg overflow-hidden border border-border"
+        style={{ minHeight: '500px' }}
+      />
+      <CCTVDialog 
+        bot={selectedBot}
+        open={cctvOpen}
+        onOpenChange={setCctvOpen}
+      />
+    </>
   );
 };
 

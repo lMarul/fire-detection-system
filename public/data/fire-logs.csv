@@ -1,0 +1,6 @@
+id,botId,botName,latitude,longitude,address,timestamp,temperature,humidity,fireConfidence,heatDetected,visualDetected,waterCannonActivated,responseTime,status
+log-001,bot-001,FireBot Alpha,14.5329,121.0066,"Pasay City, Barangay 165, Street 1",2024-11-04T14:23:00,45.5,60.2,0.87,true,true,true,00:02:15,resolved
+log-002,bot-004,FireBot Delta,14.5369,121.0106,"Pasay City, Barangay 165, Street 4",2024-11-04T14:45:00,52.3,55.1,0.92,true,true,true,00:01:45,resolved
+log-003,bot-001,FireBot Alpha,14.5329,121.0066,"Pasay City, Barangay 165, Street 1",2024-11-03T10:15:00,38.2,65.0,0.45,true,false,false,,false-alarm
+log-004,bot-002,FireBot Beta,14.5349,121.0086,"Pasay City, Barangay 165, Street 2",2024-11-02T16:30:00,48.7,58.3,0.78,true,true,true,00:03:20,resolved
+log-005,bot-003,FireBot Gamma,14.5309,121.0046,"Pasay City, Barangay 165, Street 3",2024-11-01T09:45:00,55.1,52.0,0.95,true,true,true,00:01:30,resolved

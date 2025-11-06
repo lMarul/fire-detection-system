@@ -1,43 +1,43 @@
 import { FireBot, CitizenFeedback } from '@/types/bot';
 
-// Mock fire bots deployed in San Francisco area
+// Mock fire bots deployed in Pasay City, Barangay 165 area
 export const mockBots: FireBot[] = [
   {
     id: 'bot-001',
     name: 'FireBot Alpha',
     status: 'active',
-    latitude: 37.7749,
-    longitude: -122.4194,
+    latitude: 14.5329,
+    longitude: 121.0066,
     lastActive: '2024-11-04 14:23:00',
   },
   {
     id: 'bot-002',
     name: 'FireBot Beta',
     status: 'inactive',
-    latitude: 37.7849,
-    longitude: -122.4094,
+    latitude: 14.5349,
+    longitude: 121.0086,
   },
   {
     id: 'bot-003',
     name: 'FireBot Gamma',
     status: 'inactive',
-    latitude: 37.7649,
-    longitude: -122.4294,
+    latitude: 14.5309,
+    longitude: 121.0046,
   },
   {
     id: 'bot-004',
     name: 'FireBot Delta',
-    status: 'active',
-    latitude: 37.7949,
-    longitude: -122.3994,
+    status: 'inactive',
+    latitude: 14.5369,
+    longitude: 121.0106,
     lastActive: '2024-11-04 14:45:00',
   },
   {
     id: 'bot-005',
     name: 'FireBot Epsilon',
     status: 'inactive',
-    latitude: 37.7549,
-    longitude: -122.4394,
+    latitude: 14.5289,
+    longitude: 121.0026,
   },
 ];
 

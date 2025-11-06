@@ -1,13 +1,63 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import BotMap from '@/components/BotMap';
 import BotStatusCard from '@/components/BotStatusCard';
 import { mockBots } from '@/data/mockData';
 import { Card } from '@/components/ui/card';
-import { AlertCircle, CheckCircle, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { AlertCircle, CheckCircle, Shield, Wifi, WifiOff } from 'lucide-react';
+import { useArduino } from '@/lib/arduino';
+import { FireBot } from '@/types/bot';
+import { toast } from 'sonner';
 
 const Dashboard = () => {
-  const [bots] = useState(mockBots);
+  const [bots, setBots] = useState<FireBot[]>(mockBots);
+  const { isConnected, latestData, connect, disconnect } = useArduino();
+
+  // Handle Arduino fire detection
+  useEffect(() => {
+    if (latestData) {
+      const { botId, fireDetected, temperature } = latestData;
+      
+      setBots(prevBots => 
+        prevBots.map(bot => {
+          if (bot.id === botId) {
+            const newStatus = fireDetected ? 'active' : 'inactive';
+            const statusChanged = bot.status !== newStatus;
+            
+            // Show toast notification when status changes
+            if (statusChanged && fireDetected) {
+              toast.error(`🔥 FIRE DETECTED at ${bot.name}!`, {
+                description: `Temperature: ${temperature}°C - Camera activated`,
+                duration: 10000,
+              });
+            }
+            
+            return {
+              ...bot,
+              status: newStatus,
+              lastActive: fireDetected ? new Date().toLocaleString() : bot.lastActive,
+            };
+          }
+          return bot;
+        })
+      );
+    }
+  }, [latestData]);
+
+  const handleArduinoConnect = async () => {
+    const success = await connect();
+    if (success) {
+      toast.success('Arduino connected successfully');
+    } else {
+      toast.error('Failed to connect to Arduino. Make sure Web Serial API is supported.');
+    }
+  };
+
+  const handleArduinoDisconnect = async () => {
+    await disconnect();
+    toast.info('Arduino disconnected');
+  };
 
   const activeBots = bots.filter((bot) => bot.status === 'active');
   const inactiveBots = bots.filter((bot) => bot.status === 'inactive');
@@ -17,6 +67,31 @@ const Dashboard = () => {
       <Navigation />
       
       <main className="container mx-auto px-4 py-6">
+        {/* Arduino Connection Control */}
+        <Card className="p-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {isConnected ? (
+                <>
+                  <Wifi className="h-5 w-5 text-green-500 animate-pulse" />
+                  <span className="font-medium text-green-500">Arduino Connected</span>
+                </>
+              ) : (
+                <>
+                  <WifiOff className="h-5 w-5 text-gray-500" />
+                  <span className="font-medium text-gray-500">Arduino Disconnected</span>
+                </>
+              )}
+            </div>
+            <Button 
+              onClick={isConnected ? handleArduinoDisconnect : handleArduinoConnect}
+              variant={isConnected ? "destructive" : "default"}
+            >
+              {isConnected ? 'Disconnect Arduino' : 'Connect Arduino'}
+            </Button>
+          </div>
+        </Card>
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <Card className="p-6">
