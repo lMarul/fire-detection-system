@@ -1,0 +1,6 @@
+id,name,latitude,longitude,address,status,lastActivity,temperature,humidity,waterCannonStatus,heatSensor,flameSensor,cameraSensor,batteryLevel,charging
+bot-001,FireBot Alpha,14.5329,121.0066,"Pasay City, Barangay 165, Street 1",operational,2024-11-07T09:30:00,28.5,62.3,true,true,true,true,87,true
+bot-002,FireBot Beta,14.5349,121.0086,"Pasay City, Barangay 165, Street 2",not-operational,2024-11-05T08:20:00,,,,false,false,false,false,0,false
+bot-003,FireBot Gamma,14.5309,121.0046,"Pasay City, Barangay 165, Street 3",operational,2024-11-07T09:28:00,29.1,58.7,true,true,true,true,92,true
+bot-004,FireBot Delta,14.5369,121.0106,"Pasay City, Barangay 165, Street 4",operational,2024-11-07T09:29:00,27.8,61.5,true,true,true,true,78,true
+bot-005,FireBot Epsilon,14.5289,121.0026,"Pasay City, Barangay 165, Street 5",repairing,2024-11-06T13:15:00,30.2,55.1,false,true,false,true,45,false

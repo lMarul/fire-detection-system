@@ -1,11 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Flame, ScrollText, Map } from 'lucide-react';
+import { Flame, ScrollText, Map, Bot } from 'lucide-react';
 
 const Navigation = () => {
   const location = useLocation();
 
   const navItems = [
     { path: '/', label: 'Dashboard', icon: Map },
+    { path: '/bots', label: 'Bots', icon: Bot },
     { path: '/logs', label: 'Logs', icon: ScrollText },
   ];
 

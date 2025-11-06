@@ -40,7 +40,7 @@ interface FireLog {
   waterCannonActivated: boolean;
   waterCannonActivatedTime?: string;
   emergencyCallTime?: string;
-  status: 'active' | 'resolved' | 'cleared';
+  status: 'active' | 'resolved' | 'cleared' | 'not-operational' | 'repairing' | 'operational';
 }
 
 // Parse CSV helper function with proper quote handling
@@ -92,7 +92,7 @@ const parseCSV = (csv: string): FireLog[] => {
       waterCannonActivated: obj.waterCannonActivated === 'true',
       waterCannonActivatedTime: obj.waterCannonActivatedTime && obj.waterCannonActivatedTime !== '' ? obj.waterCannonActivatedTime : undefined,
       emergencyCallTime: obj.emergencyCallTime && obj.emergencyCallTime !== '' ? obj.emergencyCallTime : undefined,
-      status: obj.status as 'active' | 'resolved' | 'cleared'
+      status: obj.status as 'active' | 'resolved' | 'cleared' | 'not-operational' | 'repairing' | 'operational'
     };
   });
 };
@@ -161,13 +161,22 @@ const Logs = () => {
   }, [logs, searchQuery, dateFilter, sortBy, statusFilter, botFilter]);
 
   const getStatusBadge = (status: FireLog['status']) => {
-    const variants = {
-      'active': 'destructive',
-      'resolved': 'default',
-      'false-alarm': 'secondary'
-    } as const;
+    const statusConfig = {
+      'active': { variant: 'destructive' as const, label: 'ACTIVE' },
+      'resolved': { variant: 'default' as const, label: 'RESOLVED' },
+      'cleared': { variant: 'secondary' as const, label: 'CLEARED' },
+      'not-operational': { variant: 'outline' as const, label: 'NOT OPERATIONAL' },
+      'repairing': { variant: 'outline' as const, label: 'REPAIRING' },
+      'operational': { variant: 'outline' as const, label: 'OPERATIONAL' }
+    };
     
-    return <Badge variant={variants[status]}>{status.toUpperCase()}</Badge>;
+    const config = statusConfig[status];
+    return <Badge variant={config.variant} className={
+      status === 'not-operational' ? 'bg-gray-500/10 text-gray-500 border-gray-500' :
+      status === 'repairing' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500' :
+      status === 'operational' ? 'bg-green-500/10 text-green-500 border-green-500' :
+      ''
+    }>{config.label}</Badge>;
   };
 
   const exportLogs = () => {
@@ -238,15 +247,15 @@ const Logs = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
           <Card className="p-4">
             <p className="text-sm text-muted-foreground mb-1">Total Events</p>
             <p className="text-2xl font-bold">{logs.length}</p>
           </Card>
           <Card className="p-4 border-destructive/50">
-            <p className="text-sm text-muted-foreground mb-1">Fires Detected</p>
+            <p className="text-sm text-muted-foreground mb-1">Active</p>
             <p className="text-2xl font-bold text-destructive">
-              {logs.filter(l => l.status === 'resolved').length}
+              {logs.filter(l => l.status === 'active').length}
             </p>
           </Card>
           <Card className="p-4 border-green-500/50">
@@ -259,6 +268,18 @@ const Logs = () => {
             <p className="text-sm text-muted-foreground mb-1">Cleared</p>
             <p className="text-2xl font-bold text-muted-foreground">
               {logs.filter(l => l.status === 'cleared').length}
+            </p>
+          </Card>
+          <Card className="p-4 border-gray-500/50">
+            <p className="text-sm text-muted-foreground mb-1">Not Operational</p>
+            <p className="text-2xl font-bold text-gray-500">
+              {logs.filter(l => l.status === 'not-operational').length}
+            </p>
+          </Card>
+          <Card className="p-4 border-yellow-500/50">
+            <p className="text-sm text-muted-foreground mb-1">Repairing</p>
+            <p className="text-2xl font-bold text-yellow-500">
+              {logs.filter(l => l.status === 'repairing').length}
             </p>
           </Card>
         </div>
@@ -320,7 +341,10 @@ const Logs = () => {
                 <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="resolved">Resolved</SelectItem>
-                <SelectItem value="false-alarm">False Alarm</SelectItem>
+                <SelectItem value="cleared">Cleared</SelectItem>
+                <SelectItem value="operational">Operational</SelectItem>
+                <SelectItem value="not-operational">Not Operational</SelectItem>
+                <SelectItem value="repairing">Repairing</SelectItem>
               </SelectContent>
             </Select>
 
@@ -360,6 +384,9 @@ const Logs = () => {
                   <div className={`w-2 h-2 rounded-full ${
                     log.status === 'active' ? 'bg-red-500 animate-pulse' :
                     log.status === 'resolved' ? 'bg-green-500' :
+                    log.status === 'operational' ? 'bg-green-500' :
+                    log.status === 'not-operational' ? 'bg-gray-500' :
+                    log.status === 'repairing' ? 'bg-yellow-500 animate-pulse' :
                     'bg-gray-500'
                   }`} />
                   <div>

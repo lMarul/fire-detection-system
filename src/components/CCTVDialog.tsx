@@ -5,12 +5,30 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { FireBot } from '@/types/bot';
 import { Camera, Signal, AlertTriangle } from 'lucide-react';
 import { useWebcam } from '@/hooks/useWebcam';
 
+// Bot interface matching CSV structure
+interface Bot {
+  id: string;
+  name: string;
+  latitude?: number;
+  longitude?: number;
+  address?: string;
+  status?: string;
+  lastActivity?: Date;
+  temperature?: number;
+  humidity?: number;
+  waterCannonStatus?: boolean;
+  heatSensor?: boolean;
+  flameSensor?: boolean;
+  cameraSensor?: boolean;
+  batteryLevel?: number;
+  charging?: boolean;
+}
+
 interface CCTVDialogProps {
-  bot: FireBot | null;
+  bot: Bot | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -131,13 +149,13 @@ const CCTVDialog = ({ bot, open, onOpenChange }: CCTVDialogProps) => {
               <div>
                 <div className="opacity-60 mb-1">COORDINATES</div>
                 <div className="font-bold">
-                  {bot.latitude.toFixed(4)}°N, {bot.longitude.toFixed(4)}°E
+                  {bot.latitude?.toFixed(4) || 'N/A'}°N, {bot.longitude?.toFixed(4) || 'N/A'}°E
                 </div>
               </div>
               <div>
-                <div className="opacity-60 mb-1">LAST ACTIVE</div>
+                <div className="opacity-60 mb-1">BATTERY</div>
                 <div className="font-bold">
-                  {bot.lastActive || 'N/A'}
+                  {bot.batteryLevel || 0}% {bot.charging ? '(Charging)' : ''}
                 </div>
               </div>
             </div>

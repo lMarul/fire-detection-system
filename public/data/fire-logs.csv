@@ -4,3 +4,9 @@ log-002,bot-004,FireBot Delta,14.5369,121.0106,"Pasay City, Barangay 165, Street
 log-003,bot-001,FireBot Alpha,14.5329,121.0066,"Pasay City, Barangay 165, Street 1",2024-11-03T10:15:00,38.2,65.0,0.45,true,false,false,false,,,cleared
 log-004,bot-002,FireBot Beta,14.5349,121.0086,"Pasay City, Barangay 165, Street 2",2024-11-02T16:30:00,48.7,58.3,0.78,true,true,true,true,16:30:02,16:30:04,resolved
 log-005,bot-003,FireBot Gamma,14.5309,121.0046,"Pasay City, Barangay 165, Street 3",2024-11-01T09:45:00,55.1,52.0,0.95,true,true,true,true,09:45:01,09:45:02,resolved
+log-006,bot-002,FireBot Beta,14.5349,121.0086,"Pasay City, Barangay 165, Street 2",2024-11-05T08:20:00,,,,,,,false,,,not-operational
+log-007,bot-005,FireBot Epsilon,14.5289,121.0026,"Pasay City, Barangay 165, Street 5",2024-11-06T13:15:00,,,,,,,false,,,repairing
+log-008,bot-003,FireBot Gamma,14.5309,121.0046,"Pasay City, Barangay 165, Street 3",2024-10-28T11:30:00,,,,,,,false,,,repairing
+log-009,bot-003,FireBot Gamma,14.5309,121.0046,"Pasay City, Barangay 165, Street 3",2024-10-29T16:45:00,,,,,,,false,,,operational
+log-010,bot-001,FireBot Alpha,14.5329,121.0066,"Pasay City, Barangay 165, Street 1",2024-10-25T14:20:00,,,,,,,false,,,not-operational
+log-011,bot-001,FireBot Alpha,14.5329,121.0066,"Pasay City, Barangay 165, Street 1",2024-10-26T09:15:00,,,,,,,false,,,operational
