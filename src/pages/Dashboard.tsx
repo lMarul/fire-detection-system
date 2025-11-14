@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import BotMap from '@/components/BotMap';
 import BotStatusCard from '@/components/BotStatusCard';
+import { FireTriggerPanel } from '@/components/FireTriggerPanel';
+import { FireAlertDialog } from '@/components/FireAlertDialog';
+import { useFireDetection } from '@/contexts/FireDetectionContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, CheckCircle, Shield, Wifi, WifiOff, Wrench, XCircle } from 'lucide-react';
@@ -77,6 +80,9 @@ const parseCSV = (csv: string): Bot[] => {
 
 const Dashboard = () => {
   const [bots, setBots] = useState<Bot[]>([]);
+  const { activeFireEvents } = useFireDetection();
+  const [openDialogs, setOpenDialogs] = useState<Record<string, boolean>>({});
+  const [shownDialogs, setShownDialogs] = useState<Set<string>>(new Set());
 
   // Load bots from CSV file
   useEffect(() => {
@@ -88,6 +94,45 @@ const Dashboard = () => {
       })
       .catch(error => console.error('Error loading bots:', error));
   }, []);
+
+  // Auto-open dialogs for new fire events (only once per event)
+  useEffect(() => {
+    activeFireEvents.forEach((event, botId) => {
+      if (!shownDialogs.has(botId)) {
+        setOpenDialogs(prev => ({ ...prev, [botId]: true }));
+        setShownDialogs(prev => new Set(prev).add(botId));
+      }
+    });
+    
+    // Clean up shown dialogs for resolved fires
+    const activeIds = new Set(activeFireEvents.keys());
+    setShownDialogs(prev => {
+      const updated = new Set(prev);
+      prev.forEach(id => {
+        if (!activeIds.has(id)) {
+          updated.delete(id);
+        }
+      });
+      return updated;
+    });
+  }, [activeFireEvents]);
+
+  // Update bot statuses based on active fire events
+  useEffect(() => {
+    setBots(prevBots => {
+      return prevBots.map(bot => {
+        const hasActiveFire = activeFireEvents.has(bot.id);
+        // Only update status if there's a change
+        if (hasActiveFire && bot.status !== 'active-fire') {
+          return { ...bot, status: 'active-fire' as const };
+        } else if (!hasActiveFire && bot.status === 'active-fire') {
+          // Return to operational when fire is resolved
+          return { ...bot, status: 'operational' as const };
+        }
+        return bot;
+      });
+    });
+  }, [activeFireEvents]);
 
   const operationalBots = bots.filter((bot) => bot.status === 'operational');
   const activeFireBots = bots.filter((bot) => bot.status === 'active-fire');
@@ -140,6 +185,22 @@ const Dashboard = () => {
             </div>
           </Card>
         </div>
+
+        {/* Fire Trigger Panel */}
+        <div className="mb-6">
+          <FireTriggerPanel bots={bots} />
+        </div>
+
+        {/* Fire Alert Dialogs */}
+        {Array.from(activeFireEvents.entries()).map(([botId, event]) => (
+          <FireAlertDialog
+            key={botId}
+            botId={botId}
+            botName={event.botName}
+            open={openDialogs[botId] || false}
+            onOpenChange={(open) => setOpenDialogs(prev => ({ ...prev, [botId]: open }))}
+          />
+        ))}
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

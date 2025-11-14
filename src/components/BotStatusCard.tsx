@@ -1,5 +1,8 @@
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { AlertCircle, CheckCircle, XCircle, Wrench } from 'lucide-react';
+import { useFireDetection } from '@/contexts/FireDetectionContext';
+import { toast } from 'sonner';
 
 // Bot interface matching CSV structure
 interface Bot {
@@ -17,6 +20,16 @@ interface BotStatusCardProps {
 }
 
 const BotStatusCard = ({ bot }: BotStatusCardProps) => {
+  const { resolveFireEvent, getFireEvent } = useFireDetection();
+  const fireEvent = getFireEvent(bot.id);
+  
+  const handleResolve = () => {
+    resolveFireEvent(bot.id);
+    toast.success(`Fire resolved for ${bot.name}`, {
+      description: 'Bot status updated to operational'
+    });
+  };
+  
   const getStatusIcon = () => {
     switch (bot.status) {
       case 'operational':
@@ -77,6 +90,18 @@ const BotStatusCard = ({ bot }: BotStatusCardProps) => {
             <p className="text-xs text-muted-foreground">
               Temp: {bot.temperature}°C
             </p>
+          )}
+          
+          {/* Resolve button for active fire */}
+          {bot.status === 'active-fire' && fireEvent && (
+            <Button
+              size="sm"
+              onClick={handleResolve}
+              className="mt-3 w-full bg-green-600 hover:bg-green-700"
+            >
+              <CheckCircle className="h-3 w-3 mr-1" />
+              Resolve Issue
+            </Button>
           )}
         </div>
         <div className={`w-3 h-3 rounded-full ${getStatusDotColor()}`} />

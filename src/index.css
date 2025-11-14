@@ -86,3 +86,27 @@ All colors MUST be HSL.
     @apply bg-success;
   }
 }
+
+/* Leaflet map z-index fixes to prevent conflicts with dialogs */
+.leaflet-pane,
+.leaflet-map-pane,
+.leaflet-container {
+  z-index: 0 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 400 !important;
+}
+
+.leaflet-control {
+  z-index: 500 !important;
+}
+
+.leaflet-popup-pane {
+  z-index: 600 !important;
+}
+
+.leaflet-tooltip-pane {
+  z-index: 650 !important;
+}

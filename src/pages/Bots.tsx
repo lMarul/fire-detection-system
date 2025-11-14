@@ -1,8 +1,11 @@
 import { useState, useMemo, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
+import { useFireDetection } from '@/contexts/FireDetectionContext';
+import { FireAlertDialog } from '@/components/FireAlertDialog';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Bot as BotIcon,
@@ -96,6 +99,8 @@ const Bots = () => {
   const [bots, setBots] = useState<Bot[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const { activeFireEvents } = useFireDetection();
+  const [openDialogs, setOpenDialogs] = useState<Record<string, boolean>>({});
 
   // Load bots from CSV file
   useEffect(() => {
@@ -107,6 +112,23 @@ const Bots = () => {
       })
       .catch(error => console.error('Error loading bots:', error));
   }, []);
+
+  // Update bot statuses based on active fire events
+  useEffect(() => {
+    setBots(prevBots => {
+      return prevBots.map(bot => {
+        const hasActiveFire = activeFireEvents.has(bot.id);
+        // Only update status if there's a change
+        if (hasActiveFire && bot.status !== 'active-fire') {
+          return { ...bot, status: 'active-fire' as const };
+        } else if (!hasActiveFire && bot.status === 'active-fire') {
+          // Return to operational when fire is resolved
+          return { ...bot, status: 'operational' as const };
+        }
+        return bot;
+      });
+    });
+  }, [activeFireEvents]);
 
   // Filter bots
   const filteredBots = useMemo(() => {
@@ -321,6 +343,19 @@ const Bots = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Fire Event Button */}
+              {bot.status === 'active-fire' && activeFireEvents.has(bot.id) && (
+                <div className="border-t pt-4 mt-4">
+                  <Button
+                    onClick={() => setOpenDialogs(prev => ({ ...prev, [bot.id]: true }))}
+                    className="w-full bg-red-600 hover:bg-red-700"
+                  >
+                    <AlertCircle className="h-4 w-4 mr-2" />
+                    View Fire Event & Resolve
+                  </Button>
+                </div>
+              )}
             </Card>
           ))}
 
@@ -334,6 +369,17 @@ const Bots = () => {
             </Card>
           )}
         </div>
+
+        {/* Fire Alert Dialogs */}
+        {Array.from(activeFireEvents.entries()).map(([botId, event]) => (
+          <FireAlertDialog
+            key={botId}
+            botId={botId}
+            botName={event.botName}
+            open={openDialogs[botId] || false}
+            onOpenChange={(open) => setOpenDialogs(prev => ({ ...prev, [botId]: open }))}
+          />
+        ))}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import CCTVDialog from './CCTVDialog';
+import { useFireDetection } from '@/contexts/FireDetectionContext';
 import 'leaflet/dist/leaflet.css';
 
 // Bot interface matching CSV structure
@@ -82,6 +83,7 @@ const BotMap = ({ bots: propBots }: BotMapProps) => {
   const [selectedBot, setSelectedBot] = useState<Bot | null>(null);
   const [cctvOpen, setCctvOpen] = useState(false);
   const [bots, setBots] = useState<Bot[]>(propBots || []);
+  const { activeFireEvents } = useFireDetection();
 
   // Load bots from CSV if not provided as props
   useEffect(() => {
@@ -98,6 +100,23 @@ const BotMap = ({ bots: propBots }: BotMapProps) => {
       })
       .catch(error => console.error('Error loading bots:', error));
   }, [propBots]);
+
+  // Update bot statuses based on active fire events
+  useEffect(() => {
+    setBots(prevBots => {
+      return prevBots.map(bot => {
+        const hasActiveFire = activeFireEvents.has(bot.id);
+        // Only update status if there's a change
+        if (hasActiveFire && bot.status !== 'active-fire') {
+          return { ...bot, status: 'active-fire' as const };
+        } else if (!hasActiveFire && bot.status === 'active-fire') {
+          // Return to operational when fire is resolved
+          return { ...bot, status: 'operational' as const };
+        }
+        return bot;
+      });
+    });
+  }, [activeFireEvents]);
 
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;

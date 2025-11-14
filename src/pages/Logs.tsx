@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
+import { getPendingFireLogs, FireLogEntry } from '@/lib/csvLogger';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -105,17 +106,78 @@ const Logs = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [botFilter, setBotFilter] = useState<string>('all');
 
-  // Load logs from CSV file
-  useEffect(() => {
+  // Function to load logs
+  const loadLogs = () => {
+    // Load CSV logs
     fetch('/data/fire-logs.csv')
       .then(response => response.text())
       .then(csv => {
-        const parsedLogs = parseCSV(csv);
-        setLogs(parsedLogs);
+        const csvLogs = parseCSV(csv);
+        
+        // Load localStorage logs
+        const localStorageLogs = getPendingFireLogs();
+        
+        // Convert localStorage logs to FireLog format
+        const convertedLocalLogs: FireLog[] = localStorageLogs.map(log => ({
+          id: log.id,
+          botId: log.botId,
+          botName: log.botName,
+          location: {
+            latitude: log.latitude,
+            longitude: log.longitude,
+            address: log.address
+          },
+          timestamp: new Date(log.timestamp),
+          temperature: log.temperature,
+          humidity: log.humidity,
+          fireConfidence: log.fireConfidence,
+          heatDetected: log.heatDetected,
+          flameDetected: log.flameDetected,
+          visualDetected: log.visualDetected,
+          waterCannonActivated: log.waterCannonActivated,
+          waterCannonActivatedTime: log.waterCannonActivatedTime,
+          emergencyCallTime: log.emergencyCallTime,
+          status: log.status
+        }));
+        
+        // Combine and sort by timestamp (newest first)
+        const allLogs = [...csvLogs, ...convertedLocalLogs].sort((a, b) => 
+          b.timestamp.getTime() - a.timestamp.getTime()
+        );
+        
+        setLogs(allLogs);
+        console.log(`📊 Loaded ${csvLogs.length} CSV logs + ${convertedLocalLogs.length} localStorage logs = ${allLogs.length} total`);
       })
       .catch(error => {
         console.error('Error loading logs:', error);
       });
+  };
+
+  // Load logs from CSV file AND localStorage
+  useEffect(() => {
+    loadLogs();
+
+    // Listen for storage changes (when logs are updated)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'fire_logs_pending') {
+        console.log('🔄 Fire logs updated, reloading...');
+        loadLogs();
+      }
+    };
+
+    // Listen for custom event when logs change in same window
+    const handleLogsUpdate = () => {
+      console.log('🔄 Fire logs updated (same window), reloading...');
+      loadLogs();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('fireLogsUpdated', handleLogsUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('fireLogsUpdated', handleLogsUpdate);
+    };
   }, []);
 
   // Filter and sort logs
