@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import BotMap from '@/components/BotMap';
 import BotStatusCard from '@/components/BotStatusCard';
-import { FireTriggerPanel } from '@/components/FireTriggerPanel';
 import { FireAlertDialog } from '@/components/FireAlertDialog';
 import { useFireDetection } from '@/contexts/FireDetectionContext';
+import { SensorData } from '@/lib/fireDetectionLogic';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, CheckCircle, Shield, Wifi, WifiOff, Wrench, XCircle } from 'lucide-react';
@@ -80,7 +80,7 @@ const parseCSV = (csv: string): Bot[] => {
 
 const Dashboard = () => {
   const [bots, setBots] = useState<Bot[]>([]);
-  const { activeFireEvents } = useFireDetection();
+  const { activeFireEvents, triggerFireDetection } = useFireDetection();
   const [openDialogs, setOpenDialogs] = useState<Record<string, boolean>>({});
   const [shownDialogs, setShownDialogs] = useState<Set<string>>(new Set());
 
@@ -94,6 +94,30 @@ const Dashboard = () => {
       })
       .catch(error => console.error('Error loading bots:', error));
   }, []);
+
+  // Enter key handler - Auto trigger FireBot Delta
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        const deltaBot = bots.find(b => b.id === 'bot-delta' || b.name === 'FireBot Delta');
+        if (deltaBot) {
+          const sensors: SensorData = {
+            heatSensor: true,
+            flameSensor: true,
+            visualDetected: true,
+            temperature: 650
+          };
+          triggerFireDetection(deltaBot.id, deltaBot as any, sensors);
+          toast.success('🔥 Fire alert triggered for FireBot Delta');
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [bots, triggerFireDetection]);
 
   // Auto-open dialogs for new fire events (only once per event)
   useEffect(() => {
@@ -184,11 +208,6 @@ const Dashboard = () => {
               <Wrench className="h-10 w-10 text-yellow-500" />
             </div>
           </Card>
-        </div>
-
-        {/* Fire Trigger Panel */}
-        <div className="mb-6">
-          <FireTriggerPanel bots={bots} />
         </div>
 
         {/* Fire Alert Dialogs */}

@@ -147,7 +147,6 @@ const BotMap = ({ bots: propBots }: BotMapProps) => {
     // Create custom icons
     const createBotIcon = (status: Bot['status']) => {
       let color: string;
-      let pulseClass = '';
       
       switch (status) {
         case 'operational':
@@ -155,25 +154,52 @@ const BotMap = ({ bots: propBots }: BotMapProps) => {
           break;
         case 'active-fire':
           color = '#ef4444'; // red
-          pulseClass = 'animate-pulse';
           break;
         case 'not-operational':
           color = '#6b7280'; // gray
           break;
         case 'repairing':
           color = '#eab308'; // yellow
-          pulseClass = 'animate-pulse';
           break;
         default:
           color = '#6b7280';
       }
       
-      const svgIcon = `
-        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="14" fill="${color}" stroke="white" stroke-width="2"/>
-          <circle cx="16" cy="16" r="6" fill="white"/>
-        </svg>
-      `;
+      const svgIcon = status === 'active-fire' 
+        ? `
+          <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <style>
+                @keyframes pulse-wave {
+                  0% {
+                    r: 14;
+                    opacity: 0.8;
+                  }
+                  100% {
+                    r: 28;
+                    opacity: 0;
+                  }
+                }
+                .wave-1 { animation: pulse-wave 2s infinite; }
+                .wave-2 { animation: pulse-wave 2s infinite 0.6s; }
+                .wave-3 { animation: pulse-wave 2s infinite 1.2s; }
+              </style>
+            </defs>
+            <!-- Pulsing waves -->
+            <circle class="wave-1" cx="16" cy="16" r="14" fill="none" stroke="${color}" stroke-width="2"/>
+            <circle class="wave-2" cx="16" cy="16" r="14" fill="none" stroke="${color}" stroke-width="2"/>
+            <circle class="wave-3" cx="16" cy="16" r="14" fill="none" stroke="${color}" stroke-width="2"/>
+            <!-- Main bot circle -->
+            <circle cx="16" cy="16" r="14" fill="${color}" stroke="white" stroke-width="2"/>
+            <circle cx="16" cy="16" r="6" fill="white"/>
+          </svg>
+        `
+        : `
+          <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="14" fill="${color}" stroke="white" stroke-width="2"/>
+            <circle cx="16" cy="16" r="6" fill="white"/>
+          </svg>
+        `;
       
       return L.icon({
         iconUrl: `data:image/svg+xml;base64,${btoa(svgIcon)}`,
