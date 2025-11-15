@@ -232,17 +232,17 @@ const Recordings = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
           <div>
-            <h1 className="text-4xl font-bold mb-2">📹 Video Recordings</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">📹 Video Recordings</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
               CCTV recordings from FireBot units • Cloud storage enabled
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-lg px-4 py-2">
+            <Badge variant="outline" className="text-sm sm:text-lg px-3 sm:px-4 py-1 sm:py-2">
               <Cloud className="h-4 w-4 mr-2" />
               {filteredRecordings.length} Videos
             </Badge>
@@ -250,8 +250,8 @@ const Recordings = () => {
         </div>
 
         {/* Filters */}
-        <Card className="p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <Card className="p-4 sm:p-6 mb-4 sm:mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
             {/* Search */}
             <div className="lg:col-span-2">
               <div className="relative">

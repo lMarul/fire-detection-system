@@ -193,41 +193,41 @@ const Bots = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center gap-3 mb-6">
-          <BotIcon className="h-8 w-8" />
-          <h1 className="text-3xl font-bold">FireBot Fleet Management</h1>
+      <div className="container mx-auto px-4 py-4 sm:py-8">
+        <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <BotIcon className="h-6 w-6 sm:h-8 sm:w-8" />
+          <h1 className="text-2xl sm:text-3xl font-bold">FireBot Fleet Management</h1>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <Card className="p-4">
-            <p className="text-sm text-muted-foreground mb-1">Total Bots</p>
-            <p className="text-2xl font-bold">{bots.length}</p>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <Card className="p-3 sm:p-4">
+            <p className="text-xs sm:text-sm text-muted-foreground mb-1">Total Bots</p>
+            <p className="text-xl sm:text-2xl font-bold">{bots.length}</p>
           </Card>
-          <Card className="p-4 border-green-500/50">
-            <p className="text-sm text-muted-foreground mb-1">Operational</p>
-            <p className="text-2xl font-bold text-green-500">
+          <Card className="p-3 sm:p-4 border-green-500/50">
+            <p className="text-xs sm:text-sm text-muted-foreground mb-1">Operational</p>
+            <p className="text-xl sm:text-2xl font-bold text-green-500">
               {bots.filter(b => b.status === 'operational').length}
             </p>
           </Card>
-          <Card className="p-4 border-destructive/50">
-            <p className="text-sm text-muted-foreground mb-1">Active Fire</p>
-            <p className="text-2xl font-bold text-destructive">
+          <Card className="p-3 sm:p-4 border-destructive/50">
+            <p className="text-xs sm:text-sm text-muted-foreground mb-1">Active Fire</p>
+            <p className="text-xl sm:text-2xl font-bold text-destructive">
               {bots.filter(b => b.status === 'active-fire').length}
             </p>
           </Card>
-          <Card className="p-4 border-yellow-500/50">
-            <p className="text-sm text-muted-foreground mb-1">Maintenance</p>
-            <p className="text-2xl font-bold text-yellow-500">
+          <Card className="p-3 sm:p-4 border-yellow-500/50">
+            <p className="text-xs sm:text-sm text-muted-foreground mb-1">Maintenance</p>
+            <p className="text-xl sm:text-2xl font-bold text-yellow-500">
               {bots.filter(b => b.status === 'not-operational' || b.status === 'repairing').length}
             </p>
           </Card>
         </div>
 
         {/* Filters */}
-        <Card className="p-4 mb-6">
-          <div className="flex items-center gap-2 mb-4">
+        <Card className="p-3 sm:p-4 mb-4 sm:mb-6">
+          <div className="flex items-center gap-2 mb-3 sm:mb-4">
             <Filter className="h-4 w-4" />
             <h2 className="font-semibold">Filters</h2>
           </div>
@@ -261,10 +261,10 @@ const Bots = () => {
         </Card>
 
         {/* Bots List */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {filteredBots.map((bot) => (
-            <Card key={bot.id} className="p-6 hover:bg-secondary/50 transition-colors">
-              <div className="flex items-start justify-between mb-4">
+            <Card key={bot.id} className="p-4 sm:p-6 hover:bg-secondary/50 transition-colors">
+              <div className="flex flex-col sm:flex-row items-start justify-between mb-3 sm:mb-4 gap-3">
                 <div className="flex items-center gap-3">
                   <div className={`w-3 h-3 rounded-full ${
                     bot.status === 'operational' ? 'bg-green-500' :
@@ -283,20 +283,20 @@ const Bots = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <div>
+                  <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                  <div className="min-w-0">
                     <p className="text-xs text-muted-foreground">Location</p>
-                    <p className="font-medium text-sm">{bot.location.address}</p>
+                    <p className="font-medium text-sm truncate">{bot.location.address}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <div>
+                  <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                  <div className="min-w-0">
                     <p className="text-xs text-muted-foreground">Last Activity</p>
-                    <p className="font-medium text-sm">{format(bot.lastActivity, 'PPp')}</p>
+                    <p className="font-medium text-sm truncate">{format(bot.lastActivity, 'PPp')}</p>
                   </div>
                 </div>
 
@@ -322,9 +322,9 @@ const Bots = () => {
               </div>
 
               {/* Sensor Status */}
-              <div className="border-t pt-4">
+              <div className="border-t pt-3 sm:pt-4">
                 <p className="text-xs text-muted-foreground mb-2">SENSOR STATUS</p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
                   <div className="flex items-center justify-between p-2 bg-secondary/30 rounded">
                     <span className="text-xs">Heat Sensor</span>
                     {getSensorStatus(bot.heatSensor)}
