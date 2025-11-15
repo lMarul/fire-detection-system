@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Flame, ScrollText, Map, Bot, Video } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 const Navigation = () => {
   const location = useLocation();
@@ -22,7 +23,8 @@ const Navigation = () => {
             </div>
           </div>
 
-          <div className="flex gap-1">
+          <div className="flex items-center gap-4">
+            <div className="flex gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -41,6 +43,8 @@ const Navigation = () => {
                 </Link>
               );
             })}
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       </div>
