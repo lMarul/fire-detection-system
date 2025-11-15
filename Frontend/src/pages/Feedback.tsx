@@ -34,9 +34,10 @@ interface FireLog {
   humidity?: number;
   fireConfidence?: number;
   heatDetected: boolean;
+  flameDetected: boolean;
   visualDetected: boolean;
-  waterCannonActivated: boolean;
-  responseTime?: string;
+  acousticExtinguisherActivated: boolean;
+  emergencyCallTime?: string;
   status: 'active' | 'resolved' | 'false-alarm';
 }
 
@@ -56,9 +57,10 @@ const mockFireLogs: FireLog[] = [
     humidity: 60.2,
     fireConfidence: 0.87,
     heatDetected: true,
+    flameDetected: true,
     visualDetected: true,
-    waterCannonActivated: true,
-    responseTime: '00:02:15',
+    acousticExtinguisherActivated: true,
+    emergencyCallTime: new Date(Date.now() - 2000000).toLocaleTimeString('en-US', { hour12: false }),
     status: 'resolved'
   },
   {
@@ -75,9 +77,10 @@ const mockFireLogs: FireLog[] = [
     humidity: 55.1,
     fireConfidence: 0.92,
     heatDetected: true,
+    flameDetected: true,
     visualDetected: true,
-    waterCannonActivated: true,
-    responseTime: '00:01:45',
+    acousticExtinguisherActivated: true,
+    emergencyCallTime: new Date(Date.now() - 1800000).toLocaleTimeString('en-US', { hour12: false }),
     status: 'resolved'
   },
   {
@@ -94,8 +97,9 @@ const mockFireLogs: FireLog[] = [
     humidity: 65.0,
     fireConfidence: 0.45,
     heatDetected: true,
+    flameDetected: false,
     visualDetected: false,
-    waterCannonActivated: false,
+    acousticExtinguisherActivated: false,
     status: 'false-alarm'
   },
   {
@@ -112,9 +116,10 @@ const mockFireLogs: FireLog[] = [
     humidity: 58.3,
     fireConfidence: 0.78,
     heatDetected: true,
+    flameDetected: true,
     visualDetected: true,
-    waterCannonActivated: true,
-    responseTime: '00:03:20',
+    acousticExtinguisherActivated: true,
+    emergencyCallTime: new Date(Date.now() - 2500000).toLocaleTimeString('en-US', { hour12: false }),
     status: 'resolved'
   },
   {
@@ -131,9 +136,10 @@ const mockFireLogs: FireLog[] = [
     humidity: 52.0,
     fireConfidence: 0.95,
     heatDetected: true,
+    flameDetected: true,
     visualDetected: true,
-    waterCannonActivated: true,
-    responseTime: '00:01:30',
+    acousticExtinguisherActivated: true,
+    emergencyCallTime: new Date(Date.now() - 1500000).toLocaleTimeString('en-US', { hour12: false }),
     status: 'resolved'
   },
 ];
@@ -367,9 +373,9 @@ const Logs = () => {
                 
                 <div className="flex items-center gap-2">
                   {getStatusBadge(log.status)}
-                  {log.waterCannonActivated && (
+                  {log.acousticExtinguisherActivated && (
                     <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500">
-                      💧 WATER CANNON ACTIVATED
+                      🔊 ACOUSTIC FIRE EXTINGUISHER ACTIVATED
                     </Badge>
                   )}
                 </div>

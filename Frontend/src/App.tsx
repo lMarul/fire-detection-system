@@ -7,6 +7,7 @@ import { FireDetectionProvider } from "@/contexts/FireDetectionContext";
 import Dashboard from "./pages/Dashboard";
 import Bots from "./pages/Bots";
 import Logs from "./pages/Logs";
+import Recordings from "./pages/Recordings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Dashboard />} />
             <Route path="/bots" element={<Bots />} />
             <Route path="/logs" element={<Logs />} />
+            <Route path="/recordings" element={<Recordings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

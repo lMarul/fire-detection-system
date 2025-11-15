@@ -26,7 +26,7 @@ interface FireEvent {
   timestamp: Date;
   sensors: SensorData;
   response: FireResponse;
-  waterCannonActivatedTime?: string;
+  acousticExtinguisherActivatedTime?: string;
   emergencyCallTime?: string;
   resolvedTime?: string;
 }
@@ -62,9 +62,9 @@ export const FireDetectionProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     // Add timestamps for actions
-    if (response.activateWaterCannon) {
-      const waterTime = new Date(timestamp.getTime() + 1000); // 1 second after detection
-      fireEvent.waterCannonActivatedTime = waterTime.toLocaleTimeString('en-US', { hour12: false });
+    if (response.activateAcousticExtinguisher) {
+      const extinguisherTime = new Date(timestamp.getTime() + 1000); // 1 second after detection
+      fireEvent.acousticExtinguisherActivatedTime = extinguisherTime.toLocaleTimeString('en-US', { hour12: false });
     }
 
     if (response.callEmergency) {
@@ -92,8 +92,8 @@ export const FireDetectionProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         }
       });
-    } else if (response.activateWaterCannon) {
-      toast.warning(`💧 Water Cannon Activated - ${bot.name}`, {
+    } else if (response.activateAcousticExtinguisher) {
+      toast.warning(`🔊 Acoustic Fire Extinguisher Activated - ${bot.name}`, {
         description: response.response,
         duration: 10000
       });
@@ -124,8 +124,8 @@ export const FireDetectionProvider: React.FC<{ children: React.ReactNode }> = ({
       heatDetected: sensors.heatSensor,
       flameDetected: sensors.flameSensor,
       visualDetected: sensors.visualDetected,
-      waterCannonActivated: response.activateWaterCannon,
-      waterCannonActivatedTime: fireEvent.waterCannonActivatedTime,
+      acousticExtinguisherActivated: response.activateAcousticExtinguisher,
+      acousticExtinguisherActivatedTime: fireEvent.acousticExtinguisherActivatedTime,
       emergencyCallTime: fireEvent.emergencyCallTime,
       status: response.isFireConfirmed ? 'active' : response.isFalseAlarm ? 'cleared' : 'active'
     };

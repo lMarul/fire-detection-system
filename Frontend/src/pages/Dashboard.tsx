@@ -21,7 +21,7 @@ interface Bot {
   lastActivity: Date;
   temperature?: number;
   humidity?: number;
-  waterCannonStatus: boolean;
+  acousticExtinguisherStatus: boolean;
   heatSensor: boolean;
   flameSensor: boolean;
   cameraSensor: boolean;
@@ -68,7 +68,7 @@ const parseCSV = (csv: string): Bot[] => {
       lastActivity: new Date(obj.lastActivity),
       temperature: obj.temperature && obj.temperature !== '' ? parseFloat(obj.temperature) : undefined,
       humidity: obj.humidity && obj.humidity !== '' ? parseFloat(obj.humidity) : undefined,
-      waterCannonStatus: obj.waterCannonStatus === 'true',
+      acousticExtinguisherStatus: obj.waterCannonStatus === 'true',
       heatSensor: obj.heatSensor === 'true',
       flameSensor: obj.flameSensor === 'true',
       cameraSensor: obj.cameraSensor === 'true',

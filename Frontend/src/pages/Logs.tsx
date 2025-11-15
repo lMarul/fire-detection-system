@@ -38,8 +38,8 @@ interface FireLog {
   heatDetected: boolean;
   flameDetected: boolean;
   visualDetected: boolean;
-  waterCannonActivated: boolean;
-  waterCannonActivatedTime?: string;
+  acousticExtinguisherActivated: boolean;
+  acousticExtinguisherActivatedTime?: string;
   emergencyCallTime?: string;
   status: 'active' | 'resolved' | 'cleared' | 'not-operational' | 'repairing' | 'operational';
 }
@@ -90,8 +90,8 @@ const parseCSV = (csv: string): FireLog[] => {
       heatDetected: obj.heatDetected === 'true',
       flameDetected: obj.flameDetected === 'true',
       visualDetected: obj.visualDetected === 'true',
-      waterCannonActivated: obj.waterCannonActivated === 'true',
-      waterCannonActivatedTime: obj.waterCannonActivatedTime && obj.waterCannonActivatedTime !== '' ? obj.waterCannonActivatedTime : undefined,
+      acousticExtinguisherActivated: obj.waterCannonActivated === 'true',
+      acousticExtinguisherActivatedTime: obj.waterCannonActivatedTime && obj.waterCannonActivatedTime !== '' ? obj.waterCannonActivatedTime : undefined,
       emergencyCallTime: obj.emergencyCallTime && obj.emergencyCallTime !== '' ? obj.emergencyCallTime : undefined,
       status: obj.status as 'active' | 'resolved' | 'cleared' | 'not-operational' | 'repairing' | 'operational'
     };
@@ -134,8 +134,8 @@ const Logs = () => {
           heatDetected: log.heatDetected,
           flameDetected: log.flameDetected,
           visualDetected: log.visualDetected,
-          waterCannonActivated: log.waterCannonActivated,
-          waterCannonActivatedTime: log.waterCannonActivatedTime,
+          acousticExtinguisherActivated: log.acousticExtinguisherActivated,
+          acousticExtinguisherActivatedTime: log.acousticExtinguisherActivatedTime,
           emergencyCallTime: log.emergencyCallTime,
           status: log.status
         }));
@@ -258,8 +258,8 @@ const Logs = () => {
       'Heat Detected': log.heatDetected ? 'Yes' : 'No',
       'Flame Detected': log.flameDetected ? 'Yes' : 'No',
       'Visual Detected': log.visualDetected ? 'Yes' : 'No',
-      'Water Cannon': log.waterCannonActivated ? 'Activated' : 'Not Activated',
-      'Water Cannon Time': log.waterCannonActivatedTime || 'N/A',
+      'Acoustic Fire Extinguisher': log.acousticExtinguisherActivated ? 'Activated' : 'Not Activated',
+      'Acoustic Fire Extinguisher Time': log.acousticExtinguisherActivatedTime || 'N/A',
       'Emergency Call Time': log.emergencyCallTime || 'N/A',
       'Status': log.status.toUpperCase()
     }));
@@ -281,9 +281,11 @@ const Logs = () => {
       { wch: 12 },  // Humidity
       { wch: 15 },  // AI Confidence
       { wch: 15 },  // Heat Detected
+      { wch: 15 },  // Flame Detected
       { wch: 15 },  // Visual Detected
-      { wch: 15 },  // Water Cannon
-      { wch: 15 },  // Response Time
+      { wch: 28 },  // Acoustic Fire Extinguisher
+      { wch: 28 },  // Acoustic Fire Extinguisher Time
+      { wch: 18 },  // Emergency Call Time
       { wch: 15 },  // Status
     ];
     ws['!cols'] = colWidths;
@@ -459,9 +461,9 @@ const Logs = () => {
                 
                 <div className="flex items-center gap-2">
                   {getStatusBadge(log.status)}
-                  {log.waterCannonActivated && (
+                  {log.acousticExtinguisherActivated && (
                     <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500">
-                      💧 WATER CANNON ACTIVATED
+                      🔊 ACOUSTIC FIRE EXTINGUISHER ACTIVATED
                     </Badge>
                   )}
                 </div>
@@ -530,10 +532,10 @@ const Logs = () => {
               </div>
 
               <div className="flex items-center gap-4 text-sm flex-wrap">
-                {log.waterCannonActivatedTime && (
+                {log.acousticExtinguisherActivatedTime && (
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-1 rounded text-xs font-medium bg-blue-500/10 text-blue-500">
-                      � Water Cannon Activated at: {log.waterCannonActivatedTime}
+                      🔊 Acoustic Fire Extinguisher Activated at: {log.acousticExtinguisherActivatedTime}
                     </span>
                   </div>
                 )}

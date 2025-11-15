@@ -15,8 +15,8 @@ export interface FireLogEntry {
   heatDetected: boolean;
   flameDetected: boolean;
   visualDetected: boolean;
-  waterCannonActivated: boolean;
-  waterCannonActivatedTime?: string;
+  acousticExtinguisherActivated: boolean;
+  acousticExtinguisherActivatedTime?: string;
   emergencyCallTime?: string;
   status: 'active' | 'resolved' | 'cleared' | 'operational' | 'not-operational' | 'repairing';
   resolvedTime?: string;

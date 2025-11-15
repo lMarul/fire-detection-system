@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Flame, ScrollText, Map, Bot } from 'lucide-react';
+import { Flame, ScrollText, Map, Bot, Video } from 'lucide-react';
 
 const Navigation = () => {
   const location = useLocation();
@@ -8,6 +8,7 @@ const Navigation = () => {
     { path: '/', label: 'Dashboard', icon: Map },
     { path: '/bots', label: 'Bots', icon: Bot },
     { path: '/logs', label: 'Logs', icon: ScrollText },
+    { path: '/recordings', label: 'Recordings', icon: Video },
   ];
 
   return (
