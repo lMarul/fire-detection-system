@@ -244,9 +244,11 @@ const Dashboard = () => {
                       <AlertCircle className="h-4 w-4" />
                       Active Fire ({activeFireBots.length})
                     </h3>
-                    {activeFireBots.map((bot) => (
-                      <BotStatusCard key={bot.id} bot={bot} />
-                    ))}
+                    <div className="space-y-2">
+                      {activeFireBots.map((bot) => (
+                        <BotStatusCard key={bot.id} bot={bot} />
+                      ))}
+                    </div>
                   </div>
                 )}
                 
@@ -256,9 +258,11 @@ const Dashboard = () => {
                       <CheckCircle className="h-4 w-4" />
                       Operational ({operationalBots.length})
                     </h3>
-                    {operationalBots.map((bot) => (
-                      <BotStatusCard key={bot.id} bot={bot} />
-                    ))}
+                    <div className="space-y-2">
+                      {operationalBots.map((bot) => (
+                        <BotStatusCard key={bot.id} bot={bot} />
+                      ))}
+                    </div>
                   </div>
                 )}
 
@@ -268,9 +272,11 @@ const Dashboard = () => {
                       <Wrench className="h-4 w-4" />
                       Maintenance ({maintenanceBots.length})
                     </h3>
-                    {maintenanceBots.map((bot) => (
-                      <BotStatusCard key={bot.id} bot={bot} />
-                    ))}
+                    <div className="space-y-2">
+                      {maintenanceBots.map((bot) => (
+                        <BotStatusCard key={bot.id} bot={bot} />
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
