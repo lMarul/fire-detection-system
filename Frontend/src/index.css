@@ -155,3 +155,27 @@ All colors MUST be HSL.
 .leaflet-tooltip-pane {
   z-index: 650 !important;
 }
+
+/* Prevent map from escaping its container on mobile */
+.leaflet-container {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Ensure map tiles don't escape */
+.leaflet-tile-pane {
+  z-index: 1 !important;
+}
+
+.leaflet-overlay-pane {
+  z-index: 2 !important;
+}
+
+.leaflet-shadow-pane {
+  z-index: 3 !important;
+}
+
+.leaflet-marker-pane {
+  z-index: 4 !important;
+}
+
