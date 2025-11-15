@@ -14,7 +14,7 @@ export interface SensorData {
 
 export interface FireResponse {
   isFireConfirmed: boolean;     // All 3 sensors TRUE
-  activateWaterCannon: boolean; // Water cannon should activate
+  activateAcousticExtinguisher: boolean; // Acoustic fire extinguisher should activate
   callEmergency: boolean;       // Emergency hotline should be called
   isFalseAlarm: boolean;        // All 3 sensors FALSE or invalid combination
   response: string;             // Human-readable response
@@ -37,12 +37,12 @@ export const CRITICAL_TEMP_CELSIUS = 800;
  * LOGIC TABLE:
  * Camera | Flame | Heat | Result
  * -------|-------|------|--------
- * TRUE   | TRUE  | TRUE | FIRE CONFIRMED - Water Cannon + Emergency
+ * TRUE   | TRUE  | TRUE | FIRE CONFIRMED - Acoustic Fire Extinguisher + Emergency
  * FALSE  | FALSE | FALSE| Normal (Green Bot)
  * TRUE   | FALSE | FALSE| FALSE ALARM
- * TRUE   | TRUE  | FALSE| Water Cannon Only
- * FALSE  | TRUE  | TRUE | Water Cannon / Emergency (depends on temp)
- * TRUE   | FALSE | TRUE | Water Cannon / Emergency (depends on temp)
+ * TRUE   | TRUE  | FALSE| Acoustic Fire Extinguisher Only
+ * FALSE  | TRUE  | TRUE | Acoustic Fire Extinguisher / Emergency (depends on temp)
+ * TRUE   | FALSE | TRUE | Acoustic Fire Extinguisher / Emergency (depends on temp)
  * FALSE  | TRUE  | FALSE| FALSE ALARM
  */
 export function evaluateFireDetection(sensors: SensorData): FireResponse {
@@ -52,10 +52,10 @@ export function evaluateFireDetection(sensors: SensorData): FireResponse {
   if (heatSensor && flameSensor && visualDetected) {
     return {
       isFireConfirmed: true,
-      activateWaterCannon: true,
+      activateAcousticExtinguisher: true,
       callEmergency: true,
       isFalseAlarm: false,
-      response: 'FIRE CONFIRMED - Nearest station is on the way + Water Cannon Activated',
+      response: 'FIRE CONFIRMED - Nearest station is on the way + Acoustic Fire Extinguisher Activated',
       severity: 'critical'
     };
   }
@@ -64,7 +64,7 @@ export function evaluateFireDetection(sensors: SensorData): FireResponse {
   if (!heatSensor && !flameSensor && !visualDetected) {
     return {
       isFireConfirmed: false,
-      activateWaterCannon: false,
+      activateAcousticExtinguisher: false,
       callEmergency: false,
       isFalseAlarm: false,
       response: 'Normal - All systems operational',
@@ -76,7 +76,7 @@ export function evaluateFireDetection(sensors: SensorData): FireResponse {
   if (visualDetected && !flameSensor && !heatSensor) {
     return {
       isFireConfirmed: false,
-      activateWaterCannon: false,
+      activateAcousticExtinguisher: false,
       callEmergency: false,
       isFalseAlarm: true,
       response: 'FALSE ALARM - Visual only, no heat or flame detected',
@@ -84,44 +84,44 @@ export function evaluateFireDetection(sensors: SensorData): FireResponse {
     };
   }
 
-  // Camera TRUE, Flame TRUE, Heat FALSE - Water Cannon Only
+  // Camera TRUE, Flame TRUE, Heat FALSE - Acoustic Fire Extinguisher Only
   if (visualDetected && flameSensor && !heatSensor) {
     return {
       isFireConfirmed: false,
-      activateWaterCannon: true,
+      activateAcousticExtinguisher: true,
       callEmergency: false,
       isFalseAlarm: false,
-      response: 'Water Cannon Activated - Visual and flame detected',
+      response: 'Acoustic Fire Extinguisher Activated - Visual and flame detected',
       severity: 'medium'
     };
   }
 
-  // Camera FALSE, Flame TRUE, Heat TRUE - Water Cannon / Emergency (temp dependent)
+  // Camera FALSE, Flame TRUE, Heat TRUE - Acoustic Fire Extinguisher / Emergency (temp dependent)
   if (!visualDetected && flameSensor && heatSensor) {
     const isCritical = temperature >= CRITICAL_TEMP_CELSIUS;
     return {
       isFireConfirmed: false,
-      activateWaterCannon: true,
+      activateAcousticExtinguisher: true,
       callEmergency: isCritical,
       isFalseAlarm: false,
       response: isCritical 
-        ? `CRITICAL - Water Cannon + Emergency (${temperature}°C)`
-        : `Water Cannon Activated - Flame and heat detected (${temperature}°C)`,
+        ? `CRITICAL - Acoustic Fire Extinguisher + Emergency (${temperature}°C)`
+        : `Acoustic Fire Extinguisher Activated - Flame and heat detected (${temperature}°C)`,
       severity: isCritical ? 'critical' : 'high'
     };
   }
 
-  // Camera TRUE, Flame FALSE, Heat TRUE - Water Cannon / Emergency (temp dependent)
+  // Camera TRUE, Flame FALSE, Heat TRUE - Acoustic Fire Extinguisher / Emergency (temp dependent)
   if (visualDetected && !flameSensor && heatSensor) {
     const isCritical = temperature >= CRITICAL_TEMP_CELSIUS;
     return {
       isFireConfirmed: false,
-      activateWaterCannon: true,
+      activateAcousticExtinguisher: true,
       callEmergency: isCritical,
       isFalseAlarm: false,
       response: isCritical
-        ? `CRITICAL - Water Cannon + Emergency (${temperature}°C)`
-        : `Water Cannon Activated - Visual and heat detected (${temperature}°C)`,
+        ? `CRITICAL - Acoustic Fire Extinguisher + Emergency (${temperature}°C)`
+        : `Acoustic Fire Extinguisher Activated - Visual and heat detected (${temperature}°C)`,
       severity: isCritical ? 'critical' : 'high'
     };
   }
@@ -130,7 +130,7 @@ export function evaluateFireDetection(sensors: SensorData): FireResponse {
   if (!visualDetected && flameSensor && !heatSensor) {
     return {
       isFireConfirmed: false,
-      activateWaterCannon: false,
+      activateAcousticExtinguisher: false,
       callEmergency: false,
       isFalseAlarm: true,
       response: 'FALSE ALARM - Flame only, no heat or visual confirmation',
@@ -141,7 +141,7 @@ export function evaluateFireDetection(sensors: SensorData): FireResponse {
   // Any other combination - treat as potential issue but not confirmed
   return {
     isFireConfirmed: false,
-    activateWaterCannon: false,
+    activateAcousticExtinguisher: false,
     callEmergency: false,
     isFalseAlarm: true,
     response: 'UNHANDLED SENSOR COMBINATION - Check system',
@@ -164,7 +164,7 @@ export function getBotStatus(fireResponse: FireResponse, isOperational: boolean)
     return 'not-operational';
   }
   
-  if (fireResponse.isFireConfirmed || fireResponse.activateWaterCannon) {
+  if (fireResponse.isFireConfirmed || fireResponse.activateAcousticExtinguisher) {
     return 'active-fire';
   }
   
