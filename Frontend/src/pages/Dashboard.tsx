@@ -227,7 +227,7 @@ const Dashboard = () => {
           <div className="lg:col-span-2">
             <Card className="p-4 overflow-hidden">
               <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Bot Deployment Map</h2>
-              <div className="h-[300px] sm:h-[400px] lg:h-[500px] relative z-0">
+              <div className="h-[300px] sm:h-[400px] lg:h-[500px] relative z-0 rounded-lg overflow-hidden border">
                 <BotMap />
               </div>
             </Card>
