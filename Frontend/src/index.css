@@ -55,48 +55,48 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 220 18% 12%;
-    --foreground: 210 20% 98%;
+    --background: 17 30% 15%;
+    --foreground: 17 10% 95%;
 
-    --card: 220 15% 15%;
-    --card-foreground: 210 20% 98%;
+    --card: 17 25% 20%;
+    --card-foreground: 17 10% 95%;
 
-    --popover: 220 15% 15%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 17 25% 20%;
+    --popover-foreground: 17 10% 95%;
 
-    --primary: 188 95% 42%;
-    --primary-foreground: 220 18% 12%;
+    --primary: 17 20% 65%;
+    --primary-foreground: 17 30% 15%;
 
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 210 20% 98%;
+    --secondary: 17 25% 30%;
+    --secondary-foreground: 17 10% 95%;
 
-    --muted: 220 15% 20%;
-    --muted-foreground: 215 15% 65%;
+    --muted: 17 25% 30%;
+    --muted-foreground: 17 15% 60%;
 
-    --accent: 188 95% 42%;
-    --accent-foreground: 220 18% 12%;
+    --accent: 17 20% 65%;
+    --accent-foreground: 17 30% 15%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 17 10% 95%;
 
     --success: 142 71% 45%;
-    --success-foreground: 220 18% 12%;
+    --success-foreground: 17 30% 15%;
 
     --warning: 38 92% 50%;
-    --warning-foreground: 220 18% 12%;
+    --warning-foreground: 17 30% 15%;
 
-    --border: 220 15% 25%;
-    --input: 220 15% 25%;
-    --ring: 188 95% 42%;
+    --border: 17 25% 35%;
+    --input: 17 25% 35%;
+    --ring: 17 20% 65%;
 
-    --sidebar-background: 220 18% 10%;
-    --sidebar-foreground: 210 20% 98%;
-    --sidebar-primary: 188 95% 42%;
-    --sidebar-primary-foreground: 220 18% 12%;
-    --sidebar-accent: 220 15% 18%;
-    --sidebar-accent-foreground: 210 20% 98%;
-    --sidebar-border: 220 15% 20%;
-    --sidebar-ring: 188 95% 42%;
+    --sidebar-background: 17 30% 12%;
+    --sidebar-foreground: 17 10% 95%;
+    --sidebar-primary: 17 20% 65%;
+    --sidebar-primary-foreground: 17 30% 15%;
+    --sidebar-accent: 17 25% 25%;
+    --sidebar-accent-foreground: 17 10% 95%;
+    --sidebar-border: 17 25% 30%;
+    --sidebar-ring: 17 20% 65%;
   }
 }
 
