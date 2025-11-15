@@ -168,7 +168,7 @@ const Dashboard = () => {
       
       <main className="container mx-auto px-4 py-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -222,12 +222,12 @@ const Dashboard = () => {
         ))}
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Map */}
           <div className="lg:col-span-2">
             <Card className="p-4">
-              <h2 className="text-xl font-bold mb-4">Bot Deployment Map</h2>
-              <div className="h-[500px]">
+              <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Bot Deployment Map</h2>
+              <div className="h-[300px] sm:h-[400px] lg:h-[500px]">
                 <BotMap />
               </div>
             </Card>
@@ -236,8 +236,8 @@ const Dashboard = () => {
           {/* Bot List */}
           <div className="lg:col-span-1">
             <Card className="p-4">
-              <h2 className="text-xl font-bold mb-4">Bot Status</h2>
-              <div className="space-y-3 max-h-[500px] overflow-y-auto">
+              <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Bot Status</h2>
+              <div className="space-y-3 max-h-[400px] sm:max-h-[500px] overflow-y-auto">
                 {activeFireBots.length > 0 && (
                   <div>
                     <h3 className="text-sm font-semibold text-destructive mb-2 flex items-center gap-2">
