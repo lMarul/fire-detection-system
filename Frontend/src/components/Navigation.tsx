@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Flame, ScrollText, Map, Bot, Video, Menu, X } from 'lucide-react';
+import { Flame, ScrollText, Map, Bot, Video, Menu, X, Shield } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { useState } from 'react';
 
@@ -12,6 +12,7 @@ const Navigation = () => {
     { path: '/bots', label: 'Bots', icon: Bot },
     { path: '/logs', label: 'Logs', icon: ScrollText },
     { path: '/recordings', label: 'Recordings', icon: Video },
+    { path: '/admin-logs', label: 'Admin Logs', icon: Shield },
   ];
 
   return (
