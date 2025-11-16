@@ -8,50 +8,95 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 18% 12%;
-    --foreground: 210 20% 98%;
+    --background: 17 20% 88%;
+    --foreground: 17 30% 15%;
 
-    --card: 220 15% 15%;
-    --card-foreground: 210 20% 98%;
+    --card: 17 15% 92%;
+    --card-foreground: 17 30% 15%;
 
-    --popover: 220 15% 15%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 17 15% 92%;
+    --popover-foreground: 17 30% 15%;
 
-    --primary: 188 95% 42%;
-    --primary-foreground: 220 18% 12%;
+    --primary: 17 25% 35%;
+    --primary-foreground: 17 10% 95%;
 
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 210 20% 98%;
+    --secondary: 17 15% 75%;
+    --secondary-foreground: 17 30% 20%;
 
-    --muted: 220 15% 20%;
-    --muted-foreground: 215 15% 65%;
+    --muted: 17 15% 75%;
+    --muted-foreground: 17 20% 40%;
 
-    --accent: 188 95% 42%;
-    --accent-foreground: 220 18% 12%;
+    --accent: 17 20% 65%;
+    --accent-foreground: 17 30% 15%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 17 10% 95%;
 
     --success: 142 71% 45%;
-    --success-foreground: 220 18% 12%;
+    --success-foreground: 17 10% 95%;
 
     --warning: 38 92% 50%;
-    --warning-foreground: 220 18% 12%;
+    --warning-foreground: 17 30% 15%;
 
-    --border: 220 15% 25%;
-    --input: 220 15% 25%;
-    --ring: 188 95% 42%;
+    --border: 17 15% 70%;
+    --input: 17 15% 70%;
+    --ring: 17 25% 35%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 220 18% 10%;
-    --sidebar-foreground: 210 20% 98%;
-    --sidebar-primary: 188 95% 42%;
-    --sidebar-primary-foreground: 220 18% 12%;
-    --sidebar-accent: 220 15% 18%;
-    --sidebar-accent-foreground: 210 20% 98%;
-    --sidebar-border: 220 15% 20%;
-    --sidebar-ring: 188 95% 42%;
+    --sidebar-background: 17 18% 85%;
+    --sidebar-foreground: 17 30% 15%;
+    --sidebar-primary: 17 25% 35%;
+    --sidebar-primary-foreground: 17 10% 95%;
+    --sidebar-accent: 17 15% 75%;
+    --sidebar-accent-foreground: 17 30% 15%;
+    --sidebar-border: 17 15% 70%;
+    --sidebar-ring: 17 25% 35%;
+  }
+
+  .dark {
+    --background: 17 30% 15%;
+    --foreground: 17 10% 95%;
+
+    --card: 17 25% 20%;
+    --card-foreground: 17 10% 95%;
+
+    --popover: 17 25% 20%;
+    --popover-foreground: 17 10% 95%;
+
+    --primary: 17 20% 65%;
+    --primary-foreground: 17 30% 15%;
+
+    --secondary: 17 25% 30%;
+    --secondary-foreground: 17 10% 95%;
+
+    --muted: 17 25% 30%;
+    --muted-foreground: 17 15% 60%;
+
+    --accent: 17 20% 65%;
+    --accent-foreground: 17 30% 15%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 17 10% 95%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 17 30% 15%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 17 30% 15%;
+
+    --border: 17 25% 35%;
+    --input: 17 25% 35%;
+    --ring: 17 20% 65%;
+
+    --sidebar-background: 17 30% 12%;
+    --sidebar-foreground: 17 10% 95%;
+    --sidebar-primary: 17 20% 65%;
+    --sidebar-primary-foreground: 17 30% 15%;
+    --sidebar-accent: 17 25% 25%;
+    --sidebar-accent-foreground: 17 10% 95%;
+    --sidebar-border: 17 25% 30%;
+    --sidebar-ring: 17 20% 65%;
   }
 }
 
@@ -110,3 +155,27 @@ All colors MUST be HSL.
 .leaflet-tooltip-pane {
   z-index: 650 !important;
 }
+
+/* Prevent map from escaping its container on mobile */
+.leaflet-container {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Ensure map tiles don't escape */
+.leaflet-tile-pane {
+  z-index: 1 !important;
+}
+
+.leaflet-overlay-pane {
+  z-index: 2 !important;
+}
+
+.leaflet-shadow-pane {
+  z-index: 3 !important;
+}
+
+.leaflet-marker-pane {
+  z-index: 4 !important;
+}
+

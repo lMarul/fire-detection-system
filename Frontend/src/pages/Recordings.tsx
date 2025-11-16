@@ -61,6 +61,7 @@ const mockRecordings: Recording[] = [
     fileSize: '45.2 MB',
     type: 'fire-event',
     status: 'uploaded',
+    thumbnail: 'https://images.unsplash.com/photo-1711472517245-e45352322113?q=80&w=1072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     hasAudio: true,
     resolution: '1920x1080',
     fps: 30
@@ -79,6 +80,7 @@ const mockRecordings: Recording[] = [
     fileSize: '62.8 MB',
     type: 'fire-event',
     status: 'uploaded',
+    thumbnail: 'https://images.unsplash.com/photo-1761414701775-922d94ca5be0?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     hasAudio: true,
     resolution: '1920x1080',
     fps: 30
@@ -97,6 +99,7 @@ const mockRecordings: Recording[] = [
     fileSize: '28.5 MB',
     type: 'motion-detected',
     status: 'uploaded',
+    thumbnail: 'https://images.unsplash.com/photo-1590859808308-3d2d9c515b1a?w=800&h=450&fit=crop',
     hasAudio: false,
     resolution: '1280x720',
     fps: 24
@@ -115,6 +118,7 @@ const mockRecordings: Recording[] = [
     fileSize: '75.1 MB',
     type: 'scheduled',
     status: 'uploaded',
+    thumbnail: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=450&fit=crop',
     hasAudio: true,
     resolution: '1920x1080',
     fps: 30
@@ -133,6 +137,7 @@ const mockRecordings: Recording[] = [
     fileSize: '22.3 MB',
     type: 'manual',
     status: 'uploading',
+    thumbnail: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=450&fit=crop',
     hasAudio: false,
     resolution: '1280x720',
     fps: 24
@@ -228,21 +233,31 @@ const Recordings = () => {
     }
   };
 
+  // Handle play video
+  const handlePlayVideo = (recording: Recording) => {
+    alert(`▶️ Playing Video\n\nBot: ${recording.botName}\nID: ${recording.id}\nLocation: ${recording.location.address}\nDuration: ${formatDuration(recording.duration)}\nResolution: ${recording.resolution}\n\n🎬 Video player would open here in production.`);
+  };
+
+  // Handle download video
+  const handleDownloadVideo = (recording: Recording) => {
+    alert(`⬇️ Downloading Video\n\nBot: ${recording.botName}\nID: ${recording.id}\nFile Size: ${recording.fileSize}\nFormat: MP4\n\n📥 Download would start here in production.`);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
           <div>
-            <h1 className="text-4xl font-bold mb-2">📹 Video Recordings</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">📹 Video Recordings</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
               CCTV recordings from FireBot units • Cloud storage enabled
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-lg px-4 py-2">
+            <Badge variant="outline" className="text-sm sm:text-lg px-3 sm:px-4 py-1 sm:py-2">
               <Cloud className="h-4 w-4 mr-2" />
               {filteredRecordings.length} Videos
             </Badge>
@@ -250,8 +265,8 @@ const Recordings = () => {
         </div>
 
         {/* Filters */}
-        <Card className="p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <Card className="p-4 sm:p-6 mb-4 sm:mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
             {/* Search */}
             <div className="lg:col-span-2">
               <div className="relative">
@@ -346,9 +361,40 @@ const Recordings = () => {
           {filteredRecordings.map((recording) => (
             <Card key={recording.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               {/* Thumbnail/Preview */}
-              <div className="relative bg-secondary/30 aspect-video flex items-center justify-center">
-                <Video className="h-16 w-16 text-muted-foreground/30" />
-                <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
+              <div className="relative bg-black aspect-video flex items-center justify-center overflow-hidden">
+                {/* Background Image */}
+                {recording.thumbnail && (
+                  <img 
+                    src={recording.thumbnail} 
+                    alt={`CCTV footage from ${recording.botName}`}
+                    className="absolute inset-0 w-full h-full object-cover opacity-70"
+                  />
+                )}
+                {/* CCTV Style Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 to-black/80">
+                  {/* Timestamp Overlay */}
+                  <div className="absolute top-2 left-2 text-white text-xs font-mono bg-black/60 px-2 py-1 rounded">
+                    {format(recording.timestamp, 'yyyy-MM-dd HH:mm:ss')}
+                  </div>
+                  {/* Bot ID Overlay */}
+                  <div className="absolute top-2 right-2 text-white text-xs font-mono bg-black/60 px-2 py-1 rounded">
+                    CAM {recording.botId.toUpperCase()}
+                  </div>
+                  {/* Location Overlay */}
+                  <div className="absolute bottom-8 left-2 text-white text-xs font-mono bg-black/60 px-2 py-1 rounded max-w-[calc(100%-1rem)]">
+                    <div className="truncate">{recording.location.address}</div>
+                  </div>
+                  {/* Recording Icon */}
+                  <div className="absolute bottom-2 left-2 flex items-center gap-1">
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    <span className="text-white text-xs font-mono">REC</span>
+                  </div>
+                  {/* Scanline Effect */}
+                  <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
+                    background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px)',
+                  }}></div>
+                </div>
+                <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded font-mono">
                   {formatDuration(recording.duration)}
                 </div>
               </div>
@@ -395,11 +441,21 @@ const Recordings = () => {
 
                 {/* Actions */}
                 <div className="flex gap-2">
-                  <Button className="flex-1" size="sm" disabled={recording.status !== 'uploaded'}>
+                  <Button 
+                    className="flex-1" 
+                    size="sm" 
+                    disabled={recording.status !== 'uploaded'}
+                    onClick={() => handlePlayVideo(recording)}
+                  >
                     <Play className="h-3 w-3 mr-2" />
                     Play
                   </Button>
-                  <Button variant="outline" size="sm" disabled={recording.status !== 'uploaded'}>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    disabled={recording.status !== 'uploaded'}
+                    onClick={() => handleDownloadVideo(recording)}
+                  >
                     <Download className="h-3 w-3" />
                   </Button>
                 </div>
