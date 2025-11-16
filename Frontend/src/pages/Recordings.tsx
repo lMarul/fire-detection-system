@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { 
   Video, 
   MapPin, 
@@ -80,7 +82,7 @@ const mockRecordings: Recording[] = [
     fileSize: '62.8 MB',
     type: 'fire-event',
     status: 'uploaded',
-    thumbnail: 'https://images.unsplash.com/photo-1761414701775-922d94ca5be0?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    thumbnail: 'https://images.unsplash.com/photo-1761414701775-922d94ca5be0?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D  ',
     hasAudio: true,
     resolution: '1920x1080',
     fps: 30
@@ -151,6 +153,13 @@ const Recordings = () => {
   const [sortBy, setSortBy] = useState<'recent' | 'oldest'>('recent');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [botFilter, setBotFilter] = useState<string>('all');
+  
+  // Authentication dialog state
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const [authUsername, setAuthUsername] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authAction, setAuthAction] = useState<{ type: 'play' | 'download', recording: Recording | null }>({ type: 'play', recording: null });
+  const [authError, setAuthError] = useState('');
 
   // Get unique bot names for filter
   const uniqueBots = useMemo(() => {
@@ -233,14 +242,38 @@ const Recordings = () => {
     }
   };
 
+  // Handle authentication
+  const handleAuthentication = () => {
+    // Simple authentication check (in production, use secure backend)
+    if (authUsername === 'admin' && authPassword === 'admin123') {
+      setAuthError('');
+      setAuthDialogOpen(false);
+      
+      if (authAction.type === 'play' && authAction.recording) {
+        alert(`▶️ Playing Video\n\nBot: ${authAction.recording.botName}\nID: ${authAction.recording.id}\nLocation: ${authAction.recording.location.address}\nDuration: ${formatDuration(authAction.recording.duration)}\nResolution: ${authAction.recording.resolution}\n\n🎬 Video player would open here in production.`);
+      } else if (authAction.type === 'download' && authAction.recording) {
+        alert(`⬇️ Downloading Video\n\nBot: ${authAction.recording.botName}\nID: ${authAction.recording.id}\nFile Size: ${authAction.recording.fileSize}\nFormat: MP4\n\n📥 Download would start here in production.`);
+      }
+      
+      // Reset auth form
+      setAuthUsername('');
+      setAuthPassword('');
+      setAuthAction({ type: 'play', recording: null });
+    } else {
+      setAuthError('Invalid username or password');
+    }
+  };
+
   // Handle play video
   const handlePlayVideo = (recording: Recording) => {
-    alert(`▶️ Playing Video\n\nBot: ${recording.botName}\nID: ${recording.id}\nLocation: ${recording.location.address}\nDuration: ${formatDuration(recording.duration)}\nResolution: ${recording.resolution}\n\n🎬 Video player would open here in production.`);
+    setAuthAction({ type: 'play', recording });
+    setAuthDialogOpen(true);
   };
 
   // Handle download video
   const handleDownloadVideo = (recording: Recording) => {
-    alert(`⬇️ Downloading Video\n\nBot: ${recording.botName}\nID: ${recording.id}\nFile Size: ${recording.fileSize}\nFormat: MP4\n\n📥 Download would start here in production.`);
+    setAuthAction({ type: 'download', recording });
+    setAuthDialogOpen(true);
   };
 
   return (
@@ -491,6 +524,59 @@ const Recordings = () => {
           </div>
         </Card>
       </div>
+
+      {/* Authentication Dialog */}
+      <Dialog open={authDialogOpen} onOpenChange={setAuthDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>🔒 Admin Authentication Required</DialogTitle>
+            <DialogDescription>
+              Please enter admin credentials to {authAction.type === 'play' ? 'play' : 'download'} this video recording.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                placeholder="Enter admin username"
+                value={authUsername}
+                onChange={(e) => setAuthUsername(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAuthentication()}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter admin password"
+                value={authPassword}
+                onChange={(e) => setAuthPassword(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAuthentication()}
+              />
+            </div>
+            {authError && (
+              <div className="text-sm text-red-500 bg-red-500/10 border border-red-500/20 rounded p-2">
+                ⚠️ {authError}
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => {
+              setAuthDialogOpen(false);
+              setAuthUsername('');
+              setAuthPassword('');
+              setAuthError('');
+            }}>
+              Cancel
+            </Button>
+            <Button onClick={handleAuthentication}>
+              Authenticate
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
