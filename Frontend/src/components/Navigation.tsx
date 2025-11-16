@@ -21,7 +21,7 @@ const Navigation = () => {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <Flame className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold">Ramkinology</span>
+              <span className="text-xl font-bold">Swift Response AI</span>
             </div>
           </div>
 
